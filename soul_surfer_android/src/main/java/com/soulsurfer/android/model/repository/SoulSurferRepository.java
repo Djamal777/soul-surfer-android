@@ -1,7 +1,9 @@
 package com.soulsurfer.android.model.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.util.Log;
 
 import com.soulsurfer.android.PageInfoListener;
@@ -45,7 +47,11 @@ public class SoulSurferRepository {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.ACTION_APP_STATE_CHANGED);
         intentFilter.addAction(Constants.ACTION_CACHE_LOADED);
-        application.registerReceiver(new SoulSurferReceiver(), intentFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            application.registerReceiver(new SoulSurferReceiver(), intentFilter, Context.RECEIVER_NOT_EXPORTED);
+        }else{
+            application.registerReceiver(new SoulSurferReceiver(), intentFilter);
+        }
     }
 
     public void onAppStateChanged() {
